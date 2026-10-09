@@ -50,10 +50,12 @@ export default function Home() {
 
       setStatus(`Transaction submitted: ${txHash}`);
 
-      const receipt = await client.waitForTransactionReceipt({
-        hash: txHash,
-        status: 'FINALIZED' as never,
-      });
+     const receipt = await client.waitForTransactionReceipt({
+  hash: txHash,
+  waitUntil: 'finalized',
+  interval: 5000,
+  retries: 100,
+});
 
       setStatus(
         `Finalized. Execution result: ${String(
