@@ -63,17 +63,29 @@ export default function Home() {
         )}`
       );
 
+      ```typescript
       const value = await client.readContract({
         address: contractAddress,
         functionName: 'get_result',
         args: [],
       });
 
-      setResult(String(value));
-    } catch (error) {
-      setStatus(error instanceof Error ? error.message : String(error));
-    }
-  }
+      let parsed: unknown = value;
+
+      if (typeof value === 'string') {
+        try {
+          parsed = JSON.parse(value);
+        } catch {
+          parsed = value;
+        }
+      }
+
+      setResult(
+        typeof parsed === 'object' && parsed !== null
+          ? JSON.stringify(parsed, null, 2)
+          : String(parsed)
+      );
+```
 
   return (
     <main className="shell">
